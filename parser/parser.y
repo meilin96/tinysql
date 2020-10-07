@@ -920,6 +920,7 @@ import (
 	EnforcedOrNot		"{ENFORCED|NOT ENFORCED}"
 	EnforcedOrNotOpt	"Optional {ENFORCED|NOT ENFORCED}"
 	EnforcedOrNotOrNotNullOpt	"{[ENFORCED|NOT ENFORCED|NOT NULL]}"
+    JoinSpecification		"ON clause"
 
 %type	<ident>
 	AsOpt			"AS or EmptyString"
@@ -3810,6 +3811,28 @@ JoinTable:
 		$$ = &ast.Join{Left: $1.(ast.ResultSetNode), Right: $3.(ast.ResultSetNode), Tp: ast.CrossJoin}
 	}
 	/* Your code here. */
+// | TableRef JoinType "JOIN" TableRef %prec tableRefPriority
+//     {
+// 	    $$ = &ast.Join{Left: $1.(ast.ResultSetNode), Right: $4.(ast.ResultSetNode), Tp: $2.(ast.JoinType)}
+//     }
+  | TableRef JoinType OuterOpt "JOIN" TableRef JoinSpecification 
+    {
+        x :=  &ast.Join{Left: $1.(ast.ResultSetNode), Right: $5.(ast.ResultSetNode), Tp: ast.CrossJoin, On: &ast.OnCondition{Expr: $6.(ast.ExprNode)}}
+        $$ = x
+    }
+
+JoinSpecification:
+    "ON" Expression
+    {
+		$$ = $2
+	}
+
+// JoinSpecificationOptional:
+//     {}
+// | JoinSpecification
+//     {
+//         $$ = $1
+//     }
 
 JoinType:
 	"LEFT"
@@ -5297,3 +5320,4 @@ CommaOpt:
 	{}
 |	','
 	{}
+
