@@ -8130,8 +8130,7 @@ yynewstate:
 		}
 	case 873:
 		{
-			x := &ast.Join{Left: yyS[yypt-5].item.(ast.ResultSetNode), Right: yyS[yypt-1].item.(ast.ResultSetNode), Tp: ast.CrossJoin, On: &ast.OnCondition{Expr: yyS[yypt-0].item.(ast.ExprNode)}}
-			parser.yyVAL.item = x
+			parser.yyVAL.item = &ast.Join{Left: yyS[yypt-5].item.(ast.ResultSetNode), Right: yyS[yypt-1].item.(ast.ResultSetNode), Tp: ast.CrossJoin, On: &ast.OnCondition{Expr: yyS[yypt-0].item.(ast.ExprNode)}}
 		}
 	case 874:
 		{
